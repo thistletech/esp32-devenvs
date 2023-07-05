@@ -1,0 +1,144 @@
+# Unit fused by flashing void_app built with
+# configs/sdkconfig.dev_sbv2_withjtag
+#
+# idf.py -p /dev/ttyUSB0 monitor
+Executing action: monitor
+Running idf_monitor in directory /home/esp/apps/efuse_app
+Executing "/home/esp/.espressif/python_env/idf5.1_py3.10_env/bin/python /home/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32s2-elf- --target esp32s2 /home/esp/apps/efuse_app/build/efuse_app.elf -m '/home/esp/.espressif/python_env/idf5.1_py3.10_env/bin/python' '/home/esp/esp-idf/tools/idf.py' '-p' '/dev/ttyUSB0'"...
+--- idf_monitor on /dev/ttyUSB0 115200 ---
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+ESP-ROM:esp32s2-rc4-20191025
+Build:Oct 25 2019
+rst:0x1 (POWERON),boot:0x8 (SPI_FAST_FLASH_BOOT)
+SPIWP:0xee
+mode:DIO, clock div:1
+Valid secure boot key blocks: 0
+secure boot verification succeeded
+load:0x3ffe6270,len:0x3174
+load:0x4004b000,len:0xabc
+load:0x4004f000,len:0x4e88
+entry 0x4004b1c0
+I (56) boot: ESP-IDF v5.1-dev-3025-g49551cc48c 2nd stage bootloader
+I (57) boot: compile time Mar  3 2023 04:05:17
+I (58) boot: chip revision: v1.0
+I (62) boot.esp32s2: SPI Speed      : 80MHz
+I (67) boot.esp32s2: SPI Mode       : DIO
+I (71) boot.esp32s2: SPI Flash Size : 2MB
+I (76) boot: Enabling RNG early entropy source...
+I (81) boot: Partition Table:
+I (85) boot: ## Label            Usage          Type ST Offset   Length
+I (92) boot:  0 nvs              WiFi data        01 02 00011000 00006000
+I (100) boot:  1 phy_init         RF data          01 01 00017000 00001000
+I (107) boot:  2 factory          factory app      00 00 00020000 00100000
+I (115) boot: End of partition table
+I (119) esp_image: segment 0: paddr=00020020 vaddr=3f000020 size=09fcch ( 40908) map
+I (136) esp_image: segment 1: paddr=00029ff4 vaddr=3ffbcef0 size=017a0h (  6048) load
+I (138) esp_image: segment 2: paddr=0002b79c vaddr=40022000 size=0487ch ( 18556) load
+I (149) esp_image: segment 3: paddr=00030020 vaddr=40080020 size=148e0h ( 84192) map
+I (170) esp_image: segment 4: paddr=00044908 vaddr=4002687c size=06674h ( 26228) load
+I (177) esp_image: segment 5: paddr=0004af84 vaddr=00000000 size=0504ch ( 20556)
+I (181) esp_image: Verifying image signature...
+I (181) secure_boot_v2: Verifying with RSA-PSS...
+I (188) secure_boot_v2: Signature verified successfully!
+I (197) boot: Loaded app from partition at offset 0x20000
+I (198) secure_boot_v2: enabling secure boot v2...
+I (203) secure_boot_v2: secure boot v2 is already enabled, continuing..
+I (211) boot: Disabling RNG early entropy source...
+I (227) cache: Instruction cache 	: size 8KB, 4Ways, cache line size 32Byte
+I (228) cpu_start: Pro cpu up.
+I (247) cpu_start: Pro cpu start user code
+I (247) cpu_start: cpu freq: 160000000 Hz
+I (247) cpu_start: Application information:
+I (250) cpu_start: Project name:     efuse_app
+I (255) cpu_start: App version:      1
+I (260) cpu_start: ELF file SHA256:  13a4cc15bdb5e25b...
+I (266) cpu_start: ESP-IDF:          v5.1-dev-3025-g49551cc48c
+I (272) cpu_start: Min chip rev:     v0.0
+I (277) cpu_start: Max chip rev:     v1.99
+I (282) cpu_start: Chip rev:         v1.0
+I (287) heap_init: Initializing. RAM available for dynamic allocation:
+I (294) heap_init: At 3FFBF068 len 0003CF98 (243 KiB): DRAM
+I (300) heap_init: At 3FFFC000 len 00003A10 (14 KiB): DRAM
+I (306) heap_init: At 3FF9E000 len 00002000 (8 KiB): RTCRAM
+I (313) spi_flash: detected chip: generic
+I (317) spi_flash: flash io: dio
+W (321) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (335) app_start: Starting scheduler on CPU0
+I (339) main_task: Started on CPU0
+I (339) main_task: Calling app_main()
+I (339) efuse-app: Start eFuse example
+W (349) secure_boot: Not disabled JTAG (set HARD_DIS_JTAG->1)
+W (349) secure_boot: Not disabled JTAG in the soft way (set SOFT_DIS_JTAG->max)
+W (359) efuse-app: Secure Boot is NOT in RELEASE mode
+I (369) efuse-app: Coding Scheme RS (Reed-Solomon coding)
+I (369) efuse-app: read efuse fields
+I (379) efuse-app: 1. read MAC address: 70:04:1d:fb:88:a2
+I (379) efuse-app: 2. read secure_version: 0
+I (389) efuse-app: 3. read custom fields
+I (389) efuse-app: module_version = 0
+I (399) efuse-app: device_role = None
+I (399) efuse-app: setting_1 = 0
+I (409) efuse-app: setting_2 = 0
+I (409) efuse-app: custom_secure_version = 0
+I (419) efuse-app: reading eFuse blocks
+I (419) efuse-app: skip BLK0: used for system purposes
+I (429) efuse-app: skip BLK1: used for system purposes
+I (429) efuse-app: read BLK2: de 48 b5 b7 50 ac a0 97 48 ba 84 0e 33 a3 b1 7b a7 07 7c 1c 82 00 38 88 20 08 58 16 07 08 06 07
+I (439) efuse-app: read BLK3: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (459) efuse-app: read BLK4: 84 ff 41 7d 85 7a 8a 26 8d 8e b9 08 a0 b4 79 d6 6b 3a 64 e2 d8 b2 8d a4 64 55 2c fb 15 d2 c7 70
+I (469) efuse-app: read BLK5: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (479) efuse-app: read BLK6: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (489) efuse-app: read BLK7: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (499) efuse-app: read BLK8: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (519) efuse-app: read BLK9: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (529) efuse-app: read BLK10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+I (539) efuse-app: reading BLK0 fields...
+I (539) efuse-app: read WR_DIS (32-bit): 01 01 80 00
+I (549) efuse-app: read RD_DIS (7-bit): 00 00 00 00
+I (559) efuse-app: read DIS_RTC_RAM_BOOT (1-bit): 00 00 00 00
+I (559) efuse-app: read DIS_ICACHE (1-bit): 00 00 00 00
+I (569) efuse-app: read DIS_DCACHE (1-bit): 00 00 00 00
+I (569) efuse-app: read DIS_DOWNLOAD_ICACHE (1-bit): 00 00 00 00
+I (579) efuse-app: read DIS_DOWNLOAD_DCACHE (1-bit): 00 00 00 00
+I (589) efuse-app: read DIS_FORCE_DOWNLOAD (1-bit): 00 00 00 00
+I (589) efuse-app: read DIS_USB (1-bit): 00 00 00 00
+I (599) efuse-app: read DIS_CAN (1-bit): 00 00 00 00
+I (599) efuse-app: read DIS_BOOT_REMAP (1-bit): 01 00 00 00
+I (609) efuse-app: read SOFT_DIS_JTAG (1-bit): 00 00 00 00
+I (619) efuse-app: read HARD_DIS_JTAG (1-bit): 00 00 00 00
+I (619) efuse-app: read DIS_DOWNLOAD_MANUAL_ENCRYPT (1-bit): 00 00 00 00
+I (629) efuse-app: read USB_EXCHG_PINS (1-bit): 00 00 00 00
+I (639) efuse-app: read USB_EXT_PHY_ENABLE (1-bit): 00 00 00 00
+I (639) efuse-app: read BLOCK0_VERSION (2-bit): 00 00 00 00
+I (649) efuse-app: read VDD_SPI_XPD (1-bit): 00 00 00 00
+I (659) efuse-app: read VDD_SPI_TIEH (1-bit): 00 00 00 00
+I (659) efuse-app: read VDD_SPI_FORCE (1-bit): 00 00 00 00
+I (669) efuse-app: read WDT_DELAY_SEL (2-bit): 00 00 00 00
+I (669) efuse-app: read SPI_BOOT_CRYPT_CNT (3-bit): 00 00 00 00
+I (679) efuse-app: read SECURE_BOOT_KEY_REVOKE0 (1-bit): 00 00 00 00
+I (689) efuse-app: read SECURE_BOOT_KEY_REVOKE1 (1-bit): 01 00 00 00
+I (699) efuse-app: read SECURE_BOOT_KEY_REVOKE2 (1-bit): 01 00 00 00
+I (699) efuse-app: read KEY_PURPOSE_0 (4-bit): 09 00 00 00
+I (709) efuse-app: read KEY_PURPOSE_1 (4-bit): 00 00 00 00
+I (709) efuse-app: read KEY_PURPOSE_2 (4-bit): 00 00 00 00
+I (719) efuse-app: read KEY_PURPOSE_3 (4-bit): 00 00 00 00
+I (729) efuse-app: read KEY_PURPOSE_4 (4-bit): 00 00 00 00
+I (729) efuse-app: read KEY_PURPOSE_5 (4-bit): 00 00 00 00
+I (739) efuse-app: read SECURE_BOOT_EN (1-bit): 01 00 00 00
+I (749) efuse-app: read SECURE_BOOT_AGGRESSIVE_REVOKE (1-bit): 00 00 00 00
+I (749) efuse-app: read FLASH_TPUW (4-bit): 00 00 00 00
+I (759) efuse-app: read DIS_DOWNLOAD_MODE (1-bit): 00 00 00 00
+I (769) efuse-app: read DIS_LEGACY_SPI_BOOT (1-bit): 01 00 00 00
+I (769) efuse-app: read UART_PRINT_CHANNEL (1-bit): 00 00 00 00
+I (779) efuse-app: read DIS_USB_DOWNLOAD_MODE (1-bit): 00 00 00 00
+I (789) efuse-app: read ENABLE_SECURITY_DOWNLOAD (1-bit): 01 00 00 00
+I (789) efuse-app: read UART_PRINT_CONTROL (2-bit): 00 00 00 00
+I (799) efuse-app: read PIN_POWER_SELECTION (1-bit): 00 00 00 00
+I (809) efuse-app: read FLASH_TYPE (1-bit): 00 00 00 00
+I (809) efuse-app: read FORCE_SEND_RESUME (1-bit): 00 00 00 00
+I (819) efuse-app: read SECURE_VERSION (16-bit): 00 00 00 00
+I (819) efuse-app: PK_HASH: 84ff417d857a8a268d8eb908a0b479d66b3a64e2d8b28da464552cfb15d2c770
+W (829) efuse-app: This example does not burn any efuse in reality only virtually
+W (839) efuse-app: The part of the code that writes efuse fields is disabled
+I (849) efuse-app: Done
+I (849) main_task: Returned from app_main()

@@ -1,0 +1,15 @@
+
+ESP32 Secure Boot Flow (Zephyr/MCUboot)
+
++----------+        +--------------------+        +-----------+
+|          |        |                    |        |           |
+| Boot ROM +--------> MCUboot bootloader +--------> App image |
+|          |        |  (MCUBOOT_PK)      |        |           |
++-----+----+        +--------------------+        +-----------+
+      |                                           ZephyrOS‒based
++-----+------+
+|    {d}     |
+|   PK_HASH  |
+|    ...     |
++------------+
+   eFuse

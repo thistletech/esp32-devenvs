@@ -1,0 +1,52 @@
+name: "publish esp32 containers"
+
+on:
+  push:
+    paths-ignore:
+      - '**/README.md'
+      - '**/img/**'
+      - 'CODEOWNERS'
+      - '**/data/**'
+    branches:
+      - 'main'
+
+jobs:
+  esp32s3-idf-publish-container:
+    # Reusable workflow can be used only at job (but not step) level
+    uses: ./.github/workflows/pub-ghcr.yml
+    with:
+      source_image_tag: "esp32s3_idf:latest"
+      target_image_tag: "esp32s3_idf:${GITHUB_SHA}"
+      docker_build_cmd: "cd esp32s3 && docker build -f Dockerfile.esp32s3_fuseblower -t esp32s3_idf:latest --build-arg SBV2_PRIVATE_KEY=sbv2_private_dev.pem --build-arg IDF_SDKCONFIG=sdkconfig.dev-sbv2_nojtag ."
+
+  esp32s2-fuseblower-publish-container:
+    # Reusable workflow can be used only at job (but not step) level
+    uses: ./.github/workflows/pub-ghcr.yml
+    with:
+      source_image_tag: "esp32s2_fuseblower:latest"
+      target_image_tag: "esp32s2_fuseblower:${GITHUB_SHA}"
+      docker_build_cmd: "cd esp32s2 && docker build -f Dockerfile.esp32s2_fuseblower -t esp32s2_fuseblower:latest --build-arg SBV2_PRIVATE_KEY=sbv2_private_dev.pem --build-arg IDF_SDKCONFIG=sdkconfig.sbv2_nojtag ."
+
+  esp32s2-zephyr-publish-container:
+    # Reusable workflow can be used only at job (but not step) level
+    uses: ./.github/workflows/pub-ghcr.yml
+    with:
+      source_image_tag: "esp32s2_zephyr:latest"
+      target_image_tag: "esp32s2_zephyr:${GITHUB_SHA}"
+      docker_build_cmd: "cd esp32s2 && docker build -f Dockerfile.esp32s2_zephyr -t esp32s2_zephyr:latest --build-arg SBV2_PRIVATE_KEY=sbv2_private_dev.pem --build-arg MCUBOOT_PRIVATE_KEY=mcuboot-ecdsa-p256_private_dev.pem --build-arg BOOTLOADER_CONFIG=bootloader_mcuboot_dev.conf ."
+
+  esp32-fuseblower-publish-container:
+    # Reusable workflow can be used only at job (but not step) level
+    uses: ./.github/workflows/pub-ghcr.yml
+    with:
+      source_image_tag: "esp32_fuseblower:latest"
+      target_image_tag: "esp32_fuseblower:${GITHUB_SHA}"
+      docker_build_cmd: "cd esp32 && docker build -f Dockerfile.esp32_fuseblower -t esp32_fuseblower:latest --build-arg SBV2_PRIVATE_KEY=sbv2_private_dev.pem --build-arg IDF_SDKCONFIG=sdkconfig.sbv2_nojtag ."
+
+  esp32-zephyr-publish-container:
+    # Reusable workflow can be used only at job (but not step) level
+    uses: ./.github/workflows/pub-ghcr.yml
+    with:
+      source_image_tag: "esp32_zephyr:latest"
+      target_image_tag: "esp32_zephyr:${GITHUB_SHA}"
+      docker_build_cmd: "cd esp32 && docker build -f Dockerfile.esp32_mcuboot_zephyr -t esp32_zephyr:latest --build-arg SBV2_PRIVATE_KEY=sbv2_private_dev.pem --build-arg MCUBOOT_PRIVATE_KEY=mcuboot-ecdsa-p256_private_dev.pem --build-arg BOOTLOADER_CONFIG=bootloader_mcuboot_dev.conf ."
