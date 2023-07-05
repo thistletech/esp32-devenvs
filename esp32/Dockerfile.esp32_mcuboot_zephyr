@@ -1,0 +1,119 @@
+# Reference:
+# - Secure boot: https://docs.mcuboot.com/readme-espressif.html
+# - Zephyr dev: https://docs.zephyrproject.org/latest/develop/getting_started/index.html
+FROM ubuntu:22.04@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea
+
+ARG TARGET="esp32"
+ARG ZEPHYR_BOARD_NAME="esp32"
+ARG PORT="/dev/ttyUSB0"
+# 20230301
+ENV MCUBOOT_COMMIT_SHA="b56a65f5cb32898a20da101ca0e3d97f8c0a3d48"
+# 20230121
+ENV ESPIDF_COMMIT_SHA="49551cc48cb3cdd5563059028749616de313f0ec"
+# 20230307. This revision has https://github.com/zephyrproject-rtos/zephyr/pull/55291
+ENV ZEPHYR_MR_COMMIT_SHA="e26bf578c6746d3800f1d62c803bbee3cb12390d"
+# Secure Boot V2 image signing private key name; file must be under keys/
+ARG SBV2_PRIVATE_KEY="sbv2_private_dev.pem"
+# MCUBoot image signing private key name; file must be under keys/
+ARG MCUBOOT_PRIVATE_KEY="mcuboot-ecdsa-p256_private_dev.pem"
+# MCUBoot bootloader configuration file name; file must be under configs/
+ARG BOOTLOADER_CONFIG="bootloader_mcuboot_dev.conf"
+
+ENV HOME /home/esp
+
+WORKDIR ${HOME}/
+SHELL ["/bin/bash", "-c"]
+# Install dependencies
+RUN apt update && apt upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt install -y \
+    git wget flex bison gperf vim xxd xz-utils file \
+    python3-dev python3-venv python3-pip python3-setuptools python3-tk python3-wheel \
+    cmake ninja-build make gcc gcc-multilib g++-multilib \
+    ccache libffi-dev libssl-dev dfu-util device-tree-compiler libusb-1.0-0 \
+    libsdl2-dev libmagic1 udev libarchive-zip-perl vbindiff
+
+COPY keys ${HOME}/keys
+COPY configs ${HOME}/configs
+COPY apps ${HOME}/apps
+
+# Create user "esp". Group dialout is for USB access from container
+RUN useradd -g dialout -m esp && \
+    cp /root/.bashrc /home/esp/ && \
+    chown -R --from=root esp /home/esp
+
+USER esp
+
+#############################
+# MCUBoot
+#############################
+
+RUN git clone https://github.com/mcu-tools/mcuboot.git && \
+    cd mcuboot && \
+    git checkout ${MCUBOOT_COMMIT_SHA} && \
+    pip3 install -r scripts/requirements.txt && \
+    git submodule update --init --recursive --checkout boot/espressif/hal/esp-idf && \
+    git submodule update --init --recursive ext/mbedtls && \
+    cd boot/espressif/hal/esp-idf && \
+    ./install.sh esp32
+
+# Build MCUBoot for ESP32
+RUN cd ${HOME}/mcuboot/boot/espressif && \
+    source ./hal/esp-idf/export.sh && \
+    # Need to pip install again inside IDF env
+    pip3 install -r ${HOME}/mcuboot/scripts/requirements.txt && \
+    mv ${HOME}/configs/${BOOTLOADER_CONFIG} port/esp32/bootloader.conf && \
+    mv ${HOME}/keys/${MCUBOOT_PRIVATE_KEY} ${HOME}/mcuboot/mcuboot_private.pem && \
+    cmake -DCMAKE_TOOLCHAIN_FILE=tools/toolchain-${TARGET}.cmake -DMCUBOOT_TARGET=${TARGET} -DMCUBOOT_FLASH_PORT=${PORT} -B build -GNinja && \
+    ninja -C build/ && \
+    # Sign MCUBoot image
+    espsecure.py sign_data --version 2 --keyfile ${HOME}/keys/${SBV2_PRIVATE_KEY} -o build/mcuboot_esp32_signed.bin build/mcuboot_esp32.bin && \
+    # Build void app for monitoring convenience
+    cd ${HOME}/apps/void_app && \
+    idf.py build
+
+#############################
+# Zephyr development
+#############################
+
+RUN cd ${HOME} && \
+    mkdir -p ${HOME}/zephyrproject && \
+    python3 -m venv ${HOME}/zephyrproject/.venv
+
+# Get Zephyr and install python deps
+RUN source ${HOME}/zephyrproject/.venv/bin/activate && \
+    pip install west && \
+    cd ${HOME}/zephyrproject && \
+    mkdir -p zephyr && \
+    cd zephyr && \
+    git init && \
+    git remote add origin https://github.com/zephyrproject-rtos/zephyr.git && \
+    git fetch --depth 1 origin ${ZEPHYR_MR_COMMIT_SHA} && \
+    git checkout FETCH_HEAD && \
+    cd .. && \
+    # Init with local manifest repo
+    west init -l ${HOME}/zephyrproject/zephyr && \
+    west update && \
+    west zephyr-export && \
+    pip install -r ${HOME}/zephyrproject/zephyr/scripts/requirements.txt && \
+    pip install kconfiglib && deactivate
+
+# Install Zephyr SDK
+RUN source ${HOME}/zephyrproject/.venv/bin/activate && \
+    wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.2/zephyr-sdk-0.15.2_linux-x86_64.tar.gz && \
+    wget -O - https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.15.2/sha256.sum | shasum --check --ignore-missing && \
+    mkdir zephyr-sdk && \
+    tar xf zephyr-sdk-0.15.2_linux-x86_64.tar.gz --strip=1 --directory zephyr-sdk && \
+    rm zephyr-sdk-0.15.2_linux-x86_64.tar.gz && \
+    cd zephyr-sdk && \
+    # Install esp32 toolchain and host tools; register cmake package
+    echo | ./setup.sh -t xtensa-espressif_esp32_zephyr-elf -h -c && deactivate
+
+# Sanity check: Build and sign hello_world example for MCUBoot
+RUN source ${HOME}/zephyrproject/.venv/bin/activate && \
+    cd ${HOME}/zephyrproject/zephyr && \
+    west build -p always -b ${ZEPHYR_BOARD_NAME} samples/hello_world -- -DCONFIG_BOOTLOADER_MCUBOOT=y && \
+    imgtool sign -k ${HOME}/mcuboot/mcuboot_private.pem \
+      --pad --pad-sig --align 4 -v 0 -H 32 -S \
+      0x100000 build/zephyr/zephyr.bin build/zephyr/zephyr_signed.bin
+
+CMD ["/bin/bash"]

@@ -1,0 +1,83 @@
+# efuse values on a development-fused unit, fused using the avoid app built with
+# sdkconfig.sbv2_nojtag and signing key sbv2_private_dev.pem
+#
+# espefuse.py summary
+espefuse.py v4.5.1
+Connecting....
+Detecting chip type... Unsupported detection protocol, switching and trying again...
+Connecting.....
+Detecting chip type... ESP32
+
+=== Run "summary" command ===
+EFUSE_NAME (Block) Description  = [Meaningful Value] [Readable/Writeable] (Hex Value)
+----------------------------------------------------------------------------------------
+Calibration fuses:
+BLK3_PART_RESERVE (BLOCK0):                        BLOCK3 partially served for ADC calibration data   = False R/W (0b0)
+ADC_VREF (BLOCK0):                                 Voltage reference calibration                      = 1121 R/- (0b00011)
+
+Config fuses:
+XPD_SDIO_FORCE (BLOCK0):                           Ignore MTDI pin (GPIO12) for VDD_SDIO on reset     = False R/W (0b0)
+XPD_SDIO_REG (BLOCK0):                             If XPD_SDIO_FORCE, enable VDD_SDIO reg on reset    = False R/W (0b0)
+XPD_SDIO_TIEH (BLOCK0):                            If XPD_SDIO_FORCE & XPD_SDIO_REG                   = 1.8V R/W (0b0)
+CLK8M_FREQ (BLOCK0):                               8MHz clock freq override                           = 54 R/W (0x36)
+SPI_PAD_CONFIG_CLK (BLOCK0):                       Override SD_CLK pad (GPIO6/SPICLK)                 = 0 R/W (0b00000)
+SPI_PAD_CONFIG_Q (BLOCK0):                         Override SD_DATA_0 pad (GPIO7/SPIQ)                = 0 R/W (0b00000)
+SPI_PAD_CONFIG_D (BLOCK0):                         Override SD_DATA_1 pad (GPIO8/SPID)                = 0 R/W (0b00000)
+SPI_PAD_CONFIG_HD (BLOCK0):                        Override SD_DATA_2 pad (GPIO9/SPIHD)               = 0 R/W (0b00000)
+SPI_PAD_CONFIG_CS0 (BLOCK0):                       Override SD_CMD pad (GPIO11/SPICS0)                = 0 R/W (0b00000)
+DISABLE_SDIO_HOST (BLOCK0):                        Disable SDIO host                                  = False R/W (0b0)
+
+Efuse fuses:
+WR_DIS (BLOCK0):                                   Efuse write disable mask                           = 257 R/W (0x0101)
+RD_DIS (BLOCK0):                                   Efuse read disable mask                            = 0 R/- (0x0)
+CODING_SCHEME (BLOCK0):                            Efuse variable block length scheme
+   = NONE (BLK1-3 len=256 bits) R/W (0b00)
+KEY_STATUS (BLOCK0):                               Usage of efuse block 3 (reserved)                  = False R/W (0b0)
+
+Identity fuses:
+MAC (BLOCK0):                                      Factory MAC Address
+   = 08:3a:8d:90:24:dc (CRC 0xfa OK) R/W
+MAC_CRC (BLOCK0):                                  CRC8 for factory MAC address                       = 250 R/W (0xfa)
+CHIP_VER_REV1 (BLOCK0):                            Silicon Revision 1                                 = True R/W (0b1)
+CHIP_VER_REV2 (BLOCK0):                            Silicon Revision 2                                 = True R/W (0b1)
+WAFER_VERSION_MINOR (BLOCK0):                      WAFER VERSION MINOR                                = 1 R/W (0b01)
+CHIP_PACKAGE (BLOCK0):                             Chip package identifier                            = 1 R/W (0b001)
+CHIP_PACKAGE_4BIT (BLOCK0):                        Chip package identifier #4bit                      = 0 R/W (0b0)
+MAC_VERSION (BLOCK3):                              Version of the MAC field                           = 0 R/W (0x00)
+WAFER_VERSION_MAJOR (BLOCK0):                      calc WAFER VERSION MAJOR from CHIP_VER_REV1 and CH = 3 R/W (0b011)
+                                                   IP_VER_REV2 and apb_ctl_date (read only)
+PKG_VERSION (BLOCK0):                              calc Chip package = CHIP_PACKAGE_4BIT << 3 + CHIP_ = 1 R/W (0x1)
+                                                   PACKAGE (read only)
+
+Security fuses:
+FLASH_CRYPT_CNT (BLOCK0):                          Flash encryption mode counter                      = 0 R/W (0b0000000)
+UART_DOWNLOAD_DIS (BLOCK0):                        Disable UART download mode (ESP32 rev3 only)       = False R/W (0b0)
+FLASH_CRYPT_CONFIG (BLOCK0):                       Flash encryption config (key tweak bits)           = 0 R/W (0x0)
+CONSOLE_DEBUG_DISABLE (BLOCK0):                    Disable ROM BASIC interpreter fallback             = True R/W (0b1)
+ABS_DONE_0 (BLOCK0):                               Secure boot V1 is enabled for bootloader image     = False R/W (0b0)
+ABS_DONE_1 (BLOCK0):                               Secure boot V2 is enabled for bootloader image     = True R/W (0b1)
+JTAG_DISABLE (BLOCK0):                             Disable JTAG                                       = True R/W (0b1)
+DISABLE_DL_ENCRYPT (BLOCK0):                       Disable flash encryption in UART bootloader        = False R/W (0b0)
+DISABLE_DL_DECRYPT (BLOCK0):                       Disable flash decryption in UART bootloader        = False R/W (0b0)
+DISABLE_DL_CACHE (BLOCK0):                         Disable flash cache in UART bootloader             = False R/W (0b0)
+BLOCK1 (BLOCK1):                                   Flash encryption key
+   = 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 R/W
+BLOCK2 (BLOCK2):                                   Secure boot key
+   = 16 70 ab 6d 8e b1 28 d8 93 7a cd 7b b0 b7 53 49 c9 2b 4a 30 3b dd af c9 91 1a 73 5f 2d 95 86 8b R/-
+BLOCK3 (BLOCK3):                                   Variable Block 3
+   = 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 R/W
+
+# espefuse.py dump
+espefuse.py v4.5.1
+Connecting......
+Detecting chip type... Unsupported detection protocol, switching and trying again...
+Connecting....
+Detecting chip type... ESP32
+BLOCK0          (                ) [0 ] read_regs: 00000101 8d9024dc 00fa083a 0000a200 00000336 01100000 00000064
+BLOCK1          (flash_encryption) [1 ] read_regs: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+BLOCK2          (secure_boot_v1 s) [2 ] read_regs: 6dab7016 d828b18e 7bcd7a93 4953b7b0 304a2bc9 c9afdd3b 5f731a91 8b86952d
+BLOCK3          (                ) [3 ] read_regs: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+
+EFUSE_REG_DEC_STATUS        0x00000000
+
+=== Run "dump" command ===

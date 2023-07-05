@@ -1,0 +1,118 @@
+name: "esp32 container build check"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  esp32s3-container-build:
+    name: "esp32s3: container-build"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Test building container esp32s3"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}/esp32s3
+          # config 1
+          docker build -f Dockerfile.esp32s3_fuseblower \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg IDF_SDKCONFIG=sdkconfig.dev-sbv2_nojtag \
+            .
+          # config 2
+          docker build -f Dockerfile.esp32s3_fuseblower \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg IDF_SDKCONFIG=sdkconfig.dev-sbv2_withjtag \
+            .
+          # config 3
+          docker build -f Dockerfile.esp32s3_fuseblower \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg IDF_SDKCONFIG=sdkconfig.dev-sbv2-fe_withjtag \
+            .
+
+  esp32s2-container-build-fuseblower:
+    name: "esp32s2: container-build - fuseblower"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Test building fuse blower container esp32s2fb"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}/esp32s2
+          # Build using a SBV2 enabling sdkconfig
+          docker build -f Dockerfile.esp32s2_fuseblower \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg IDF_SDKCONFIG=sdkconfig.sbv2_nojtag \
+            .
+
+  esp32s2-container-build-zephyr:
+    name: "esp32s2: container-build - zephyr/mcuboot"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Test building container esp32s2zephyr"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}/esp32s2
+          docker build -f Dockerfile.esp32s2_zephyr \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg MCUBOOT_PRIVATE_KEY="mcuboot-ecdsa-p256_private_dev.pem" \
+            --build-arg BOOTLOADER_CONFIG="bootloader_mcuboot_dev.conf" \
+            .
+
+  esp32-container-build-fuseblower:
+    name: "esp32: container-build - fuseblower"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Test building fuse blower container esp32s2fb"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}/esp32
+          # Build using a SBV2 enabling sdkconfig
+          docker build -f Dockerfile.esp32_fuseblower \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg IDF_SDKCONFIG=sdkconfig.sbv2_nojtag \
+            .
+
+  esp32-container-build-zephyr:
+    name: "esp32: container-build - zephyr/mcuboot"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Test building container esp32zephyr"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}/esp32
+          docker build -f Dockerfile.esp32_mcuboot_zephyr \
+            --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
+            --build-arg MCUBOOT_PRIVATE_KEY="mcuboot-ecdsa-p256_private_dev.pem" \
+            --build-arg BOOTLOADER_CONFIG="bootloader_mcuboot_dev.conf" \
+            .

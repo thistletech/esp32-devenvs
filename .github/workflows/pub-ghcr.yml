@@ -1,0 +1,37 @@
+# Reusable workflow.
+# https://docs.github.com/en/actions/using-workflows/reusing-workflows
+name: "Publish to GHCR"
+on:
+  workflow_call:
+    inputs:
+      source_image_tag:
+        required: true
+        type: string
+      target_image_tag:
+        required: true
+        type: string
+      docker_build_cmd:
+        required: true
+        type: string
+jobs:
+  publish-container:
+    name: "publish container"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+      - name: "Build container"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          eval "${{ inputs.docker_build_cmd }}"
+      # Publish container image to GitHub Container Registry (GHCR)
+      - name: "publish to ghcr.io"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          GHCR_URI="ghcr.io"
+          GHCR_IMAGE_URI="${GHCR_URI}/${{ github.repository_owner }}/${{ inputs.target_image_tag }}"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login "${GHCR_URI}" -u ${{ github.actor }} --password-stdin
+          docker tag "${{ inputs.source_image_tag }}" "${GHCR_IMAGE_URI}"
+          docker push "${GHCR_IMAGE_URI}"
