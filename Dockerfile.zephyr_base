@@ -44,7 +44,7 @@ RUN git clone https://github.com/mcu-tools/mcuboot.git && \
     git submodule update --init --recursive --checkout boot/espressif/hal/esp-idf && \
     git submodule update --init --recursive ext/mbedtls && \
     cd boot/espressif/hal/esp-idf && \
-    ./install.sh esp32 esp32s2 esp32s3
+    ./install.sh esp32,esp32s2,esp32s3
 
 #############################
 # Zephyr development
