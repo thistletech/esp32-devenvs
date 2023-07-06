@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - 'main'
-      # for testing
-      - 'syncom/dockerfile-base-images'
     paths:
       - 'Dockerfile.idf_base'
       - 'Dockerfile.zephyr_base'
