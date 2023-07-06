@@ -1,43 +1,25 @@
-# https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html
-FROM ubuntu:22.04@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea
+# Docker image used to build and sign ESP-IDF images for SBV2 in development
+#
+# WARNING: DON'T use the default SBV2_PRIVATE_KEY in production!!!
+#
+# To build Docker image, call `docker build` from the current directory of this
+# file
+#
+# Reference:
+# - https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html
+FROM ghcr.io/thistletech/devenv_idf_base:7444a5629e029501fee055d92a32fdffc0119df0
 
 # sdkconfig file used to build IDF apps (non-MCUBoot), for secure boot related
 # stuff
 ARG IDF_SDKCONFIG="sdkconfig.sbv2_nojtag"
 # Private key used to sign SBV2 images during build. Key file must be under keys
 ARG SBV2_PRIVATE_KEY="sbv2_private_dev.pem"
-# 20230121
-ENV ESPIDF_COMMIT_SHA="49551cc48cb3cdd5563059028749616de313f0ec"
-SHELL ["/bin/bash", "-c"]
-# Install dependencies
-RUN apt update && apt upgrade -y && \
-    apt install -y git wget flex bison gperf python3 python3-venv \
-    cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0 \
-    vim xxd file
 
-ENV HOME /home/esp
-WORKDIR ${HOME}/
+COPY --chown=esp:dialout keys/${SBV2_PRIVATE_KEY} ${HOME}/keys/sbv2_private.pem
+COPY --chown=esp:dialout configs ${HOME}/configs
+COPY --chown=esp:dialout apps ${HOME}/apps
 
-# Obtain ESP-IDF, and set up tools & environment
-RUN git clone https://github.com/espressif/esp-idf.git && \
-    cd esp-idf && \
-    git checkout ${ESPIDF_COMMIT_SHA} && \
-    git submodule update --init --recursive && \
-    ./install.sh esp32
-
-# Do copies after ESP-IDF installation, to improve caching
-COPY keys/${SBV2_PRIVATE_KEY} ${HOME}/keys/sbv2_private.pem
-COPY configs ${HOME}/configs
-COPY apps ${HOME}/apps
-
-# Create user "esp". Group dialout is for USB access from container
-RUN useradd -g dialout -m esp && \
-    cp /root/.bashrc /home/esp/ && \
-    chown -R --from=root esp /home/esp
-
-USER esp
-
-# Build void app
+# Build void app, sign using private key PEM file
 RUN cd ${HOME} && \
     . esp-idf/export.sh && \
     cd ${HOME}/apps && \

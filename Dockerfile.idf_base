@@ -3,9 +3,8 @@
 # file
 #
 # References:
-# - Secure boot: https://docs.mcuboot.com/readme-espressif.html
 # - ESP32 get started:
-# https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/linux-macos-setup.html
+# https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/linux-macos-setup.html
 FROM ubuntu:22.04@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea
 
 # 20230121
