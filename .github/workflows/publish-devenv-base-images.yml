@@ -1,0 +1,59 @@
+name: 'Publish Base Devenv Docker Images to GHCR'
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'Dockerfile.idf_base'
+      - 'Dockerfile.zephyr_base'
+
+jobs:
+  publish-idf-container:
+    name: 'publish IDF devenv base container image'
+    runs-on: ubuntu-latest
+    env:
+      idf_source_image_tag: 'devenv_idf:base'
+      idf_target_image_name: 'devenv_idf_base'
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v3
+      - name: "Build base containers"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          docker build -f Dockerfile.idf_base -t ${idf_source_image_tag} .
+      # Publish container image to GitHub Container Registry (GHCR)
+      - name: "Publish to ghcr.io"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          GHCR_URI="ghcr.io"
+          GHCR_IDF_IMAGE_URI="${GHCR_URI}/${{ github.repository_owner }}/${idf_target_image_name}:${GITHUB_SHA}"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login "${GHCR_URI}" -u ${{ github.actor }} --password-stdin
+          docker tag "${idf_source_image_tag}" "${GHCR_IDF_IMAGE_URI}"
+          docker push "${GHCR_IDF_IMAGE_URI}"
+
+  publish-zephyr-container:
+    name: 'publish Zephyr/MCUboot devenv base container image'
+    runs-on: ubuntu-latest
+    env:
+      zephyr_source_image_tag: 'devenv_zephyr:base'
+      zephyr_target_image_name: 'devenv_zephyr_base'
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v3
+      - name: "Build base containers"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          docker build -f Dockerfile.zephyr_base -t ${zephyr_source_image_tag} .
+      # Publish container image to GitHub Container Registry (GHCR)
+      - name: "Publish to ghcr.io"
+        run: |
+          set -euxo pipefail
+          cd ${{ github.workspace }}
+          GHCR_URI="ghcr.io"
+          GHCR_ZEPHYR_IMAGE_URI="${GHCR_URI}/${{ github.repository_owner }}/${zephyr_target_image_name}:${GITHUB_SHA}"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login "${GHCR_URI}" -u ${{ github.actor }} --password-stdin
+          docker tag "${zephyr_source_image_tag}" "${GHCR_ZEPHYR_IMAGE_URI}"
+          docker push "${GHCR_ZEPHYR_IMAGE_URI}"

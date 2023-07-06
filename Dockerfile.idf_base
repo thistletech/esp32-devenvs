@@ -1,0 +1,37 @@
+
+# To build Docker image, call `docker build` from the parent directory of this
+# file
+#
+# References:
+# - Secure boot: https://docs.mcuboot.com/readme-espressif.html
+# - ESP32 get started:
+# https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/linux-macos-setup.html
+FROM ubuntu:22.04@sha256:965fbcae990b0467ed5657caceaec165018ef44a4d2d46c7cdea80a9dff0d1ea
+
+# 20230121
+ENV ESPIDF_COMMIT_SHA="49551cc48cb3cdd5563059028749616de313f0ec"
+SHELL ["/bin/bash", "-c"]
+# Install dependencies
+RUN apt update && apt upgrade -y && \
+    apt install -y git wget flex bison gperf python3 python3-venv \
+    cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0 \
+    vim xxd file
+
+ENV HOME /home/esp
+WORKDIR ${HOME}/
+
+# Obtain ESP-IDF, and set up tools & environment
+RUN git clone https://github.com/espressif/esp-idf.git && \
+    cd esp-idf && \
+    git checkout ${ESPIDF_COMMIT_SHA} && \
+    git submodule update --init --recursive && \
+    ./install.sh esp32 esp32s2 esp32s3
+
+# Create user "esp". Group dialout is for USB access from container
+RUN useradd -g dialout -m esp && \
+    cp /root/.bashrc /home/esp/ && \
+    chown -R --from=root esp /home/esp
+
+USER esp
+
+CMD ["/bin/bash"]
