@@ -7,7 +7,7 @@
 #
 # Reference:
 # - https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/linux-macos-setup.html
-FROM ghcr.io/thistletech/devenv_idf_base:7444a5629e029501fee055d92a32fdffc0119df0
+FROM ghcr.io/thistletech/devenv_idf_base:91717a88614327e2c1bd75452d9d0118a04a6400
 
 # sdkconfig file used to build IDF apps (non-MCUBoot), for secure boot related
 # stuff

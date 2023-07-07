@@ -9,7 +9,7 @@
 # Reference:
 # - Secure boot: https://docs.mcuboot.com/readme-espressif.html
 # - Zephyr dev: https://docs.zephyrproject.org/latest/develop/getting_started/index.html
-FROM ghcr.io/thistletech/devenv_zephyr_base:7444a5629e029501fee055d92a32fdffc0119df0
+FROM ghcr.io/thistletech/devenv_zephyr_base:91717a88614327e2c1bd75452d9d0118a04a6400
 
 ARG TARGET="esp32s2"
 ARG ZEPHYR_BOARD_NAME="esp32s2_saola"
