@@ -460,5 +460,21 @@ Both the IDF bootloader image and the application image are verified against
 <summary>Use Pre-built Containers</summary>
 
 ## Pull Pre-built Container Images from GHCR
+One can pull pre-built container images from the GitHub Container Registry
+(GHCR) in [GitHub
+Packages](https://github.com/orgs/thistletech/packages?repo_name=esp32-devenvs).
+
+```bash
+# Example: docker pull ghcr.io/thistletech/devenv_zephyr_base:91717a88614327e2c1bd75452d9d0118a04a6400
+$ docker pull <GHCR_IMAGE_URI>
+```
+
+Packages named `devenv_idf_base` and `devenv_zephyr_base` are Docker images that
+set up the build environments for ESP-IDF and MCUboot/ZephyrOS development,
+respectively. They are used as base images in Dockerfiles whose names are
+suffixed with `_fuseblower` or `mcuboot_zephyr` (e.g.,
+[esp32/Dockerfile_esp32_fuseblower](./esp32/Dockerfile.esp32_fuseblower) and
+[esp32/Dockerfile.esp32_mcuboot_zephyr](./esp32/Dockerfile.esp32_mcuboot_zephyr))
+to build and development-sign bootloader and application images.
 
 </details>
