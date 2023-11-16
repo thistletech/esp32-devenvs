@@ -9,7 +9,7 @@
 # - https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/get-started/linux-macos-setup.html
 FROM ghcr.io/thistletech/devenv_idf_base:91717a88614327e2c1bd75452d9d0118a04a6400
 
-# sdkconfig file used to build IDF apps (non-MCUBoot), for secure boot related
+# sdkconfig file used to build IDF apps (non-MCUboot), for secure boot related
 # stuff. File must be under directory configs/
 ARG IDF_SDKCONFIG="sdkconfig.dev-sbv2_nojtag"
 # Secure Boot V2 image signing private key name; file must be under keys/

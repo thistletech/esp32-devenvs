@@ -16,18 +16,18 @@ ARG ZEPHYR_BOARD_NAME="esp32s2_saola"
 ARG PORT="/dev/ttyUSB0"
 # Secure Boot V2 image signing private key name; file must be under keys/
 ARG SBV2_PRIVATE_KEY="sbv2_private_dev.pem"
-# MCUBoot image signing private key name; file must be under keys/
+# MCUboot image signing private key name; file must be under keys/
 ARG MCUBOOT_PRIVATE_KEY="mcuboot-ecdsa-p256_private_dev.pem"
-# MCUBoot bootloader configuration file name; file must be under configs/
+# MCUboot bootloader configuration file name; file must be under configs/
 ARG BOOTLOADER_CONFIG="bootloader_mcuboot_dev.conf"
 
 COPY --chown=esp:dialout keys ${HOME}/keys
 COPY --chown=esp:dialout configs ${HOME}/configs
 
 #############################
-# MCUBoot
+# MCUboot
 #############################
-# Build MCUBoot for ESP32-S2
+# Build MCUboot for ESP32-S2
 RUN cd ${HOME}/mcuboot/boot/espressif && \
     source ./hal/esp-idf/export.sh && \
     # Need to pip install again inside IDF env
@@ -36,13 +36,13 @@ RUN cd ${HOME}/mcuboot/boot/espressif && \
     mv ${HOME}/keys/${MCUBOOT_PRIVATE_KEY} ${HOME}/mcuboot/mcuboot_private.pem && \
     cmake -DCMAKE_TOOLCHAIN_FILE=tools/toolchain-${TARGET}.cmake -DMCUBOOT_TARGET=${TARGET} -DMCUBOOT_FLASH_PORT=${PORT} -B build -GNinja && \
     ninja -C build/ && \
-    # Sign MCUBoot image
+    # Sign MCUboot image
     espsecure.py sign_data --version 2 --keyfile ${HOME}/keys/${SBV2_PRIVATE_KEY} -o build/mcuboot_esp32s2_signed.bin build/mcuboot_esp32s2.bin
 
 #############################
 # Zephyr development
 #############################
-# Sanity check: Build and sign hello_world example for MCUBoot
+# Sanity check: Build and sign hello_world example for MCUboot
 RUN source ${HOME}/zephyrproject/.venv/bin/activate && \
     cd ${HOME}/zephyrproject/zephyr && \
     west build -p always -b ${ZEPHYR_BOARD_NAME} samples/hello_world -- -DCONFIG_BOOTLOADER_MCUBOOT=y && \
