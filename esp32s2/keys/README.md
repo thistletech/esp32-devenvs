@@ -1,8 +1,8 @@
-# ESP32 Secure Boot V2 and MCUBoot Application Verificaiton Keys
+# ESP32 Secure Boot V2 and MCUboot Application Verificaiton Keys
 
 ## Keygen: Development Keys
 
-- MCUBoot image verification key pair (ECDSA-P256)
+- MCUboot image verification key pair (ECDSA-P256)
 
   ```bash
   export MCUBOOT_SK="mcuboot-ecdsa-p256_private_dev.pem"

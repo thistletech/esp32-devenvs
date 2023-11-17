@@ -21,13 +21,13 @@ Both the IDF bootloader image and the application image are verified against
 
 ![Secure Boot Flow: ESP-IDF](./img/secure-boot-flow_esp-idf.png "Secure Boot Flow: ESP-IDF")
 
-### Secure Boot Flow: Zephyr/MCUBoot
+### Secure Boot Flow: Zephyr/MCUboot
 
 The IDF bootloader image is verified against `PK_HASH` (public key hash) in
-eFuse. The application image is verified against `MCUBOOT_PK` (MCUBoot public
-key) in MCUBoot image.
+eFuse. The application image is verified against `MCUBOOT_PK` (MCUboot public
+key) in MCUboot image.
 
-![Secure Boot Flow: Zephyr/MCUBoot](./img/secure-boot-flow_esp32-mcuboot.png "Secure Boot Flow: Zephyr/MCUBoot")
+![Secure Boot Flow: Zephyr/MCUboot](./img/secure-boot-flow_esp32-mcuboot.png "Secure Boot Flow: Zephyr/MCUboot")
 
 ### Secure Boot Efuse Blowing
 
@@ -92,9 +92,9 @@ Use the fuseblower Docker image `esp32fb:dev` built with
   idf.py flash
   ```
 
-### Zephyr/MCUBoot Development (with Secure Boot Image Signing)
+### Zephyr/MCUboot Development (with Secure Boot Image Signing)
 
-- Build container image for Zephyr/MCUBoot development. Note that for
+- Build container image for Zephyr/MCUboot development. Note that for
   `--build-arg` values, private keys must be under the
   [esp32/keys](./esp32/keys/) folder, and bootloader configs must be under
   the [esp32/configs](./esp32/configs/) folder. If no build argument is
@@ -119,7 +119,7 @@ Use the fuseblower Docker image `esp32fb:dev` built with
 
   Inside the container,
 
-  - For MCUBoot and secure boot development
+  - For MCUboot and secure boot development
     - Use `/home/esp/mcuboot`.
     - Remember to set up the ESP-IDF environment by sourcing `export.sh`
 
@@ -136,7 +136,7 @@ Use the fuseblower Docker image `esp32fb:dev` built with
       source ${HOME}/zephyrproject/.venv/bin/activate
       ```
 
-- Flash MCUBoot and Zephyr App Images
+- Flash MCUboot and Zephyr App Images
 
   On Linux host, we can interact with the development board from the container
 
@@ -150,7 +150,7 @@ Use the fuseblower Docker image `esp32fb:dev` built with
   ```bash
   cd ${HOME}/mcuboot/boot/espressif
   source ./hal/esp-idf/export.sh
-  # Flash MCUBoot image at offset 0x1000
+  # Flash MCUboot image at offset 0x1000
   esptool.py -p /dev/ttyUSB0 \
     -b 460800 \
     --before default_reset \
@@ -162,7 +162,7 @@ Use the fuseblower Docker image `esp32fb:dev` built with
     --flash_freq 40m \
     0x1000 build/mcuboot_esp32_signed.bin
   # Flash Zephyr application image at offset 0x10000. This is the slot0 offset
-  # configured in bootloader.conf of MCUBoot
+  # configured in bootloader.conf of MCUboot
   esptool.py -p /dev/ttyUSB0 \
     -b 460800 \
     --before default_reset \
@@ -221,20 +221,20 @@ Use the fuseblower Docker image `esp32fb:dev` built with
 <details>
 <summary>ESP32-S2: Container Local Build Setup</summary>
 
-## ESP32-S2 (MCUBoot and Zephyr)
+## ESP32-S2 (MCUboot and Zephyr)
 
 Dev board: ESP32-S2-DevKitM-1-N4R2 ([Mouser
 link](https://www.mouser.com/ProductDetail/Espressif-Systems/ESP32-S2-DevKitM-1-N4R2?qs=vvQtp7zwQdNx66oTi6gqpw%3D%3D&countryCode=US&currencyCode=USD);
 [Datasheet](https://www.mouser.com/new/espressif/espressif-esp32-s2-kits/))
 
 
-### Secure Boot Flow: Zephyr/MCUBoot
+### Secure Boot Flow: Zephyr/MCUboot
 
 The IDF bootloader image is verified against `PK_HASH` (public key hash) in
-eFuse. The application image is verified against `MCUBOOT_PK` (MCUBoot public
-key) in MCUBoot image.
+eFuse. The application image is verified against `MCUBOOT_PK` (MCUboot public
+key) in MCUboot image.
 
-![Secure Boot Flow: Zephyr/MCUBoot](./img/secure-boot-flow_esp32-mcuboot.png "Secure Boot Flow: Zephyr/MCUBoot")
+![Secure Boot Flow: Zephyr/MCUboot](./img/secure-boot-flow_esp32-mcuboot.png "Secure Boot Flow: Zephyr/MCUboot")
 
 ### Secure Boot Efuse Blowing
 
@@ -262,9 +262,9 @@ an unfused board to blow fuses to enable secure boot. The `efuse_app` can be
 flashed (cf. [flashing instructions](./esp32s2/apps/efuse_app/README.md)) on a
 development-fused board to read out efuse values.
 
-### Zephyr/MCUBoot Development (with Secure Boot Image Signing)
+### Zephyr/MCUboot Development (with Secure Boot Image Signing)
 
-- Build container image for Zephyr/MCUBoot development. Note that for
+- Build container image for Zephyr/MCUboot development. Note that for
   `--build-arg` values, private keys must be under the
   [esp32s2/keys](./esp32s2/keys/) folder, and bootloader configs must be under
   the [esp32s2/configs](./esp32s2/configs/) folder. If no build argument is
@@ -287,7 +287,7 @@ development-fused board to read out efuse values.
 
   Inside the container,
 
-  - For MCUBoot and secure boot development
+  - For MCUboot and secure boot development
     - Use `/home/esp/mcuboot`.
     - Remember to set up the ESP-IDF environment by sourcing `export.sh`
 
@@ -304,7 +304,7 @@ development-fused board to read out efuse values.
       source ${HOME}/zephyrproject/.venv/bin/activate
       ```
 
-- Flash MCUBoot and Zephyr App Images
+- Flash MCUboot and Zephyr App Images
 
   On Linux host, we can interact with the development board from the container
 
@@ -318,7 +318,7 @@ development-fused board to read out efuse values.
   ```bash
   cd ${HOME}/mcuboot/boot/espressif
   source ./hal/esp-idf/export.sh
-  # Flash MCUBoot image at offset 0x1000
+  # Flash MCUboot image at offset 0x1000
   esptool.py -p /dev/ttyUSB0 \
     -b 460800 \
     --before default_reset \
@@ -330,7 +330,7 @@ development-fused board to read out efuse values.
     --flash_freq 40m \
     0x1000 build/mcuboot_esp32s2_signed.bin
   # Flash Zephyr application image at offset 0x10000. This is the slot0 offset
-  # configured in bootloader.conf of MCUBoot
+  # configured in bootloader.conf of MCUboot
   esptool.py -p /dev/ttyUSB0 \
     -b 460800 \
     --before default_reset \
