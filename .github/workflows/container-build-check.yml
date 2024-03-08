@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32s3"
         run: |
           set -euxo pipefail
@@ -46,7 +46,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building fuse blower container esp32s2fb"
         run: |
           set -euxo pipefail
@@ -66,7 +66,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32s2zephyr"
         run: |
           set -euxo pipefail
@@ -86,7 +86,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building fuse blower container esp32s2fb"
         run: |
           set -euxo pipefail
@@ -106,7 +106,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32zephyr"
         run: |
           set -euxo pipefail
