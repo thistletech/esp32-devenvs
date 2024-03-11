@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32s3"
         run: |
           set -euxo pipefail
@@ -46,7 +46,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building fuse blower container esp32s2fb"
         run: |
           set -euxo pipefail
@@ -66,10 +66,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32s2zephyr"
         run: |
           set -euxo pipefail
+
+          # "Out of disk space" workaround
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
           cd ${{ github.workspace }}/esp32s2
           docker build -f Dockerfile.esp32s2_mcuboot_zephyr \
             --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \
@@ -86,7 +93,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building fuse blower container esp32s2fb"
         run: |
           set -euxo pipefail
@@ -106,10 +113,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Test building container esp32zephyr"
         run: |
           set -euxo pipefail
+
+          # "Out of disk space" workaround
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
           cd ${{ github.workspace }}/esp32
           docker build -f Dockerfile.esp32_mcuboot_zephyr \
             --build-arg SBV2_PRIVATE_KEY="sbv2_private_dev.pem" \

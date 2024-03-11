@@ -16,7 +16,7 @@ jobs:
       idf_target_image_name: 'devenv_idf_base'
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Build base containers"
         run: |
           set -euxo pipefail
@@ -41,7 +41,7 @@ jobs:
       zephyr_target_image_name: 'devenv_zephyr_base'
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: "Build base containers"
         run: |
           set -euxo pipefail
