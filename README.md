@@ -419,19 +419,19 @@ Both the IDF bootloader image and the application image are verified against
 - Run container
 
   ```bash
-  docker run --rm -it esp32s3:latest
+  # Adjust the --device value to appropriate port
+  docker run --rm -it --device=/dev/ttyUSB0 esp32s3:latest
   ```
 
-- Build sample app inside container
+- Build sample void app inside container. Note that the app specific
+  `sdkconfig.defaults` is symlinked to `../sdkconfig.apps`.
 
   ```bash
   $ pwd
   /home/esp
   # Set up environment
   . esp-idf/export.sh
-  # Get sample app - hello_world and build for esp32s3 target
-  $ cp -r esp-idf/examples/get-started/hello_world/ .
-  $ cd hello_world
+  $ cd apps/avoid_app
   $ idf.py set-target esp32s3
   $ idf.py build
   ```
@@ -449,11 +449,41 @@ Both the IDF bootloader image and the application image are verified against
   Inside container, you can interact with the device using esp-idf tools, e.g.,
 
   ```bash
+  cd apps/void_app
   # Display serial output
   idf.py monitor
-  # Flash app and partition table images
-  idf.py flash
+  # Flash bootloader - idf.py flash cannot be used if secure boot is enabled
+  # Adjust device node (-p option) as needed 
+  # Second-stage bootloader shall be flashed at offset 0x0000
+  esptool.py --chip esp32s3 \
+      --port=/dev/ttyUSB0 \
+      --baud=460800 \
+      --before=default_reset \
+      --after=no_reset \
+      --no-stub \
+      write_flash \
+      --flash_mode dio \
+      --flash_freq 80m \
+      --flash_size keep \
+      0x0 build/bootloader/bootloader.bin
+  # Flash app and partition table images. Can use `idf.py flash` or explicitly
+  # as below. Adjust device node (-p option) as needed 
+  esptool.py -c esp32s3 \
+      -p /dev/ttyUSB0 \
+      -b 460800 \
+      --before=default_reset \
+      --after=no_reset \
+      --no-stub \
+      write_flash \
+      --flash_mode dio \
+      --flash_freq 80m \
+      --flash_size keep \
+      0x20000 build/void_app.bin \
+      0x10000 build/partition_table/partition-table.bin
   ```
+
+  Please refer to the void app's [flashing
+  instructions](./esp32s3/apps/void_app/README.md) for more detail.
 </details>
 
 <details>
