@@ -51,7 +51,7 @@ esp@c29e740b2630:~$ source ${HOME}/esp-idf/export.sh
 esp@c29e740b2630:~$ cd apps/void_app
 # Flash bootloader
 # Adjust device node (-p option) as needed.
-# ESP32-S2's bootloader shall be flashed at offset 0x1000
+# ESP32's bootloader shall be flashed at offset 0x1000
 esp@c29e740b2630:~/apps/void_app$ esptool.py --chip esp32 \
     --port=/dev/ttyUSB0 \
     --baud=460800 \
