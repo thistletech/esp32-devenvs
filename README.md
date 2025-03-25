@@ -77,8 +77,8 @@ Use the fuseblower Docker image `esp32fb:dev` built with
   # Set up environment
   . esp-idf/export.sh
   # Get sample app - hello_world and build for esp32 target
-  $ cp -r esp-idf/examples/get-started/hello_world/ .
-  $ cd hello_world
+  $ cp -r esp-idf/examples/get-started/hello_world/ apps/
+  $ cd apps/hello_world
   # Configure app signing key. Please adjust the sdkconfig settings as needed
   # for your app
   $ rm -r sdkconfig sdkconfig.ci
