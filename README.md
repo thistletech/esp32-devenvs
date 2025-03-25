@@ -69,7 +69,7 @@ Use the fuseblower Docker image `esp32fb:dev` built with
   docker run --device=/dev/ttyUSB0 --rm -it esp32fb:dev
   ```
 
-- Build sample app inside container
+- Build your app (we use a sample app in the following example) inside container
 
   ```bash
   $ pwd
@@ -79,6 +79,11 @@ Use the fuseblower Docker image `esp32fb:dev` built with
   # Get sample app - hello_world and build for esp32 target
   $ cp -r esp-idf/examples/get-started/hello_world/ .
   $ cd hello_world
+  # Configure app signing key. Please adjust the sdkconfig settings as needed
+  # for your app
+  $ rm -r sdkconfig sdkconfig.ci
+  $ ln -s ../sbv2_private_pem.app sbv2_private.pem
+  $ ln -s ../sdkconfig.apps sdkconfig.defaults
   $ idf.py set-target esp32
   $ idf.py build
   ```
