@@ -23,7 +23,7 @@ To build IDF apps using
 command
 
 ```bash
-# In repository directory's root
+# At top-level directory of the repository
 cd esp32
 docker build -f Dockerfile.esp32_fuseblower -t esp32fb:latest --build-arg IDF_SDKCONFIG=sdkconfig.dev_sbv2_nojtag .
 ```
